@@ -2,7 +2,6 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_pymongo import PyMongo
 from flask_restful import Api
-from werkzeug.security import safe_str_cmp
 
 from utils import JSONEncoder
 from config import Config
