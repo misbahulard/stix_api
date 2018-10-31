@@ -64,6 +64,7 @@ class UserLogin(Resource):
       
 
 class UserDelete(Resource):
+    @jwt_required
     def delete(self):
         data = parser.parse_args()
         username = data['username']
@@ -105,14 +106,8 @@ class TokenRefresh(Resource):
       
 
 class AllUsers(Resource):
+    @jwt_required
     def get(self):
         user = User()
         return {'users': user.get_all_user()}
       
-      
-class SecretResource(Resource):
-    @jwt_required
-    def get(self):
-        return {
-            'answer': 42
-        }

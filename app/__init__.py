@@ -27,13 +27,37 @@ def check_if_token_in_blacklist(decrypted_token):
     else:
         return False
 
-from resource import user
+from resource import user, observed_data, indicator, identity, threat_actor, attack_pattern, bundle
 
-api.add_resource(user.UserRegistration, '/registration')
-api.add_resource(user.UserLogin, '/login')
-api.add_resource(user.UserDelete, '/user/delete')
-api.add_resource(user.UserLogoutAccess, '/logout/access')
-api.add_resource(user.UserLogoutRefresh, '/logout/refresh')
-api.add_resource(user.TokenRefresh, '/token/refresh')
-api.add_resource(user.AllUsers, '/users')
-api.add_resource(user.SecretResource, '/secret')
+# user
+api.add_resource(user.UserRegistration, '/api/v1/registration')
+api.add_resource(user.UserLogin, '/api/v1/login')
+api.add_resource(user.UserDelete, '/api/v1/user/delete')
+api.add_resource(user.UserLogoutAccess, '/api/v1/logout/access')
+api.add_resource(user.UserLogoutRefresh, '/api/v1/logout/refresh')
+api.add_resource(user.TokenRefresh, '/api/v1/token/refresh')
+api.add_resource(user.AllUsers, '/api/v1/users')
+
+# observed-data
+api.add_resource(observed_data.AllObservedData, '/api/v1/observed-datas')
+api.add_resource(observed_data.ObservedDataFind, '/api/v1/observed-datas/<string:id>')
+
+# indicator
+api.add_resource(indicator.AllIndicator, '/api/v1/indicators')
+api.add_resource(indicator.IndicatorFind, '/api/v1/indicators/<string:id>')
+
+# identity
+api.add_resource(identity.AllIdentity, '/api/v1/identities')
+api.add_resource(identity.IdentityFind, '/api/v1/identities/<string:id>')
+
+# threat actor
+api.add_resource(threat_actor.AllThreatActor, '/api/v1/threat-actors')
+api.add_resource(threat_actor.ThreatActorFind, '/api/v1/threat-actors/<string:id>')
+
+# attack pattern
+api.add_resource(attack_pattern.AllAttackPattern, '/api/v1/attack-patterns')
+api.add_resource(attack_pattern.AttackPatternFind, '/api/v1/attack-patterns/<string:id>')
+
+# bundle
+api.add_resource(bundle.AllBundle, '/api/v1/bundles')
+api.add_resource(bundle.BundleFind, '/api/v1/bundles/<string:id>')
