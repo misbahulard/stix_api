@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_pymongo import PyMongo
 from flask_restful import Api
@@ -10,6 +11,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 app.json_encoder = JSONEncoder
 
+CORS(app)
 jwt = JWTManager(app)
 mongo = PyMongo(app)
 api = Api(app)

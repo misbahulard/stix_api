@@ -11,7 +11,7 @@ class Jwt(object):
 
 
     def add_jwt(self, jti):
-        result = self.collection.insert_one({'jti', jti})
+        result = self.collection.insert_one({'jti': jti})
         if result is not None:
             return True
         else:

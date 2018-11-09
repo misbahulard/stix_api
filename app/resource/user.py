@@ -7,6 +7,7 @@ from flask_restful import Resource, reqparse
 
 from app import mongo
 from app.model.user import User
+from app.model.jwt import Jwt
 
 parser = reqparse.RequestParser()
 parser.add_argument('username')
@@ -49,18 +50,25 @@ class UserLogin(Resource):
         user_data = user.find_user(username)
 
         if user_data is None:
-            return {'message': 'User {} doesn\'t exist'.format(username)}
+            return {
+                'success': False,
+                'message': 'User {} doesn\'t exist'.format(username)
+                }
         current_password = user_data['password']
         if User.verify_hash(password, current_password):
             access_token = create_access_token(identity=username)
             refresh_token = create_refresh_token(identity=username)
             return {
+                'success': True,
                 'message': 'Login Success',
                 'access_token': access_token,
                 'refresh_token': refresh_token
                 }
         else:
-            return {'message': 'Login Failed'}
+            return {
+                'success': False,
+                'message': 'Login Failed'
+                }
       
 
 class UserDelete(Resource):
@@ -80,10 +88,18 @@ class UserLogoutAccess(Resource):
     def post(self):
         jti = get_raw_jwt()['jti']
         try:
-            mongo.db.jwt.insert_one({'jti', jti})
-            return {'message': 'Access token has been revoked'}
-        except:
-            return {'message': 'Something went wrong'}, 500
+            jwt = Jwt()
+            jwt.add_jwt(jti)
+            return {
+                'success': True,
+                'message': 'Access token has been revoked'
+                }
+        except Exception as e:
+            print e
+            return {
+                'success': False,
+                'message': 'Something went wrong'
+                }, 500
       
       
 class UserLogoutRefresh(Resource):
@@ -91,10 +107,17 @@ class UserLogoutRefresh(Resource):
     def post(self):
         jti = get_raw_jwt()['jti']
         try:
-            mongo.db.jwt.insert_one({'jti', jti})
-            return {'message': 'Refresh token has been revoked'}
+            jwt = Jwt()
+            jwt.add_jwt(jti)
+            return {
+                'success': True,
+                'message': 'Refresh token has been revoked'
+                }
         except:
-            return {'message': 'Something went wrong'}, 500
+            return {
+                'success': False,
+                'message': 'Something went wrong'
+                }, 500
       
       
 class TokenRefresh(Resource):
@@ -102,7 +125,10 @@ class TokenRefresh(Resource):
     def post(self):
         current_user = get_jwt_identity()
         access_token = create_access_token(identity=current_user)
-        return {'access_token': access_token}
+        return {
+            'success': True,
+            'access_token': access_token
+            }
       
 
 class AllUsers(Resource):
