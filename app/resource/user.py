@@ -4,6 +4,7 @@ from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, get_raw_jwt,
                                 jwt_refresh_token_required, jwt_required)
 from flask_restful import Resource, reqparse
+import datetime
 
 from app import mongo
 from app.model.user import User
@@ -56,7 +57,8 @@ class UserLogin(Resource):
                 }
         current_password = user_data['password']
         if User.verify_hash(password, current_password):
-            access_token = create_access_token(identity=username)
+            expires = datetime.timedelta(hours=1)
+            access_token = create_access_token(identity=username, expires_delta=expires)
             refresh_token = create_refresh_token(identity=username)
             return {
                 'success': True,
