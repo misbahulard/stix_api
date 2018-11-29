@@ -7,15 +7,19 @@ from flask_restful import Resource, reqparse
 from app import mongo
 from app.model.bundle import Bundle
 from app.utils import get_links
+import json
+import ast 
 
 parser = reqparse.RequestParser()
 parser.add_argument('id')
 parser.add_argument('limit')
 parser.add_argument('offset')
+parser.add_argument('sorted')
+parser.add_argument('filtered')
 
 class AllBundle(Resource):
     @jwt_required
-    def get(self):
+    def post(self):
         """ get all bundle using pagination default limit=20 """
 
         data = parser.parse_args()
@@ -30,9 +34,19 @@ class AllBundle(Resource):
         else:
             offset = int(data['offset'])
 
+        if data['sorted'] is not None:
+            sort = ast.literal_eval(data['sorted'])
+        else:
+            sort = None
+
+        if data['filtered'] is not None:
+            filt = ast.literal_eval(data['filtered'])
+        else:
+            filt = None
+
         # get data
         bundle = Bundle()
-        bundle_data = bundle.get_all(limit, offset)
+        bundle_data = bundle.get_all(limit, offset, sort, filt)
         size = bundle.count()
 
         # get links
