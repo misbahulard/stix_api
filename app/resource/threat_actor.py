@@ -1,4 +1,4 @@
-import json
+import ast
 
 from flask import jsonify
 from flask_jwt_extended import jwt_required
@@ -12,10 +12,12 @@ parser = reqparse.RequestParser()
 parser.add_argument('id')
 parser.add_argument('limit')
 parser.add_argument('offset')
+parser.add_argument('sorted')
+parser.add_argument('filtered')
 
 class AllThreatActor(Resource):
     @jwt_required
-    def get(self):
+    def post(self):
         """ get all threat_actor using pagination default limit=20 """
 
         data = parser.parse_args()
@@ -30,9 +32,19 @@ class AllThreatActor(Resource):
         else:
             offset = int(data['offset'])
 
+        if data['sorted'] is not None:
+            sort = ast.literal_eval(data['sorted'])
+        else:
+            sort = None
+
+        if data['filtered'] is not None:
+            filt = ast.literal_eval(data['filtered'])
+        else:
+            filt = None
+
         # get data
         threat_actor = ThreatActor()
-        threat_actor_data = threat_actor.get_all(limit, offset)
+        threat_actor_data = threat_actor.get_all(limit, offset, sort, filt)
         size = threat_actor.count()
 
         # get links

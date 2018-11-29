@@ -1,4 +1,4 @@
-import json
+import ast
 
 from flask import jsonify
 from flask_jwt_extended import jwt_required
@@ -7,8 +7,6 @@ from flask_restful import Resource, reqparse
 from app import mongo
 from app.model.bundle import Bundle
 from app.utils import get_links
-import json
-import ast 
 
 parser = reqparse.RequestParser()
 parser.add_argument('id')

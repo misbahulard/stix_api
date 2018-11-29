@@ -1,4 +1,4 @@
-import json
+import ast
 
 from flask import jsonify
 from flask_jwt_extended import jwt_required
@@ -12,10 +12,12 @@ parser = reqparse.RequestParser()
 parser.add_argument('id')
 parser.add_argument('limit')
 parser.add_argument('offset')
+parser.add_argument('sorted')
+parser.add_argument('filtered')
 
 class AllObservedData(Resource):
     @jwt_required
-    def get(self):
+    def post(self):
         """ get all observed data using pagination default limit=20 """
 
         data = parser.parse_args()
@@ -30,9 +32,19 @@ class AllObservedData(Resource):
         else:
             offset = int(data['offset'])
 
+        if data['sorted'] is not None:
+            sort = ast.literal_eval(data['sorted'])
+        else:
+            sort = None
+
+        if data['filtered'] is not None:
+            filt = ast.literal_eval(data['filtered'])
+        else:
+            filt = None
+
         # get data
         observed_data = ObservedData()
-        obs_data = observed_data.get_all(limit, offset)
+        obs_data = observed_data.get_all(limit, offset, sort, filt)
         size = observed_data.count()
 
         # get links

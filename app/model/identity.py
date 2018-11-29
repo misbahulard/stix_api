@@ -9,8 +9,14 @@ class Identity(object):
         self.collection = mongo.db.identity
 
     
-    def get_all(self, limit, offset):
-        identity_list = list(self.collection.find().skip(offset).limit(limit))
+    def get_all(self, limit, offset, sort, filt):
+        query = self.collection.find().skip(offset).limit(limit)
+        if filt is not None:
+            query = self.collection.find({filt['id']: {'$regex': filt['value']}}).skip(offset).limit(limit)
+        if sort is not None:
+            query.sort(sort['id'], -1 if sort['desc'] else 1 )
+        
+        identity_list = list(query)
         result = jsonify_stix(identity_list)
         return result
 

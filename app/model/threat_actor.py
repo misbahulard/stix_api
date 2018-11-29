@@ -9,8 +9,14 @@ class ThreatActor(object):
         self.collection = mongo.db.threat_actor
 
     
-    def get_all(self, limit, offset):
-        threat_actor_list = list(self.collection.find().skip(offset).limit(limit))
+    def get_all(self, limit, offset, sort, filt):
+        query = self.collection.find().skip(offset).limit(limit)
+        if filt is not None:
+            query = self.collection.find({filt['id']: {'$regex': filt['value']}}).skip(offset).limit(limit)
+        if sort is not None:
+            query.sort(sort['id'], -1 if sort['desc'] else 1 )
+        
+        threat_actor_list = list(query)
         result = jsonify_stix(threat_actor_list)
         return result
 
