@@ -18,12 +18,12 @@ parser.add_argument('filtered')
 class AllAttackPattern(Resource):
     @jwt_required
     def post(self):
-        """ get all attack_pattern using pagination default limit=20 """
+        """ get all attack_pattern using pagination default limit=5 """
 
         data = parser.parse_args()
 
         if data['limit'] is None:
-            limit = 20
+            limit = 5
         else:
             limit = int(data['limit'])
 
@@ -44,8 +44,7 @@ class AllAttackPattern(Resource):
 
         # get data
         attack_pattern = AttackPattern()
-        attack_pattern_data = attack_pattern.get_all(limit, offset, sort, filt)
-        size = attack_pattern.count()
+        attack_pattern_data, size = attack_pattern.get_all(limit, offset, sort, filt)
 
         # get links
         links = get_links(size, limit, offset)

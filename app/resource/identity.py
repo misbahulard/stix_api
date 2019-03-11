@@ -18,12 +18,12 @@ parser.add_argument('filtered')
 class AllIdentity(Resource):
     @jwt_required
     def post(self):
-        """ get all identity using pagination default limit=20 """
+        """ get all identity using pagination default limit=5 """
 
         data = parser.parse_args()
 
         if data['limit'] is None:
-            limit = 20
+            limit = 5
         else:
             limit = int(data['limit'])
 
@@ -44,8 +44,7 @@ class AllIdentity(Resource):
 
         # get data
         identity = Identity()
-        identity_data = identity.get_all(limit, offset, sort, filt)
-        size = identity.count()
+        identity_data, size = identity.get_all(limit, offset, sort, filt)
 
         # get links
         links = get_links(size, limit, offset)

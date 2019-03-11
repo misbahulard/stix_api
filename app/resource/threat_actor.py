@@ -18,12 +18,12 @@ parser.add_argument('filtered')
 class AllThreatActor(Resource):
     @jwt_required
     def post(self):
-        """ get all threat_actor using pagination default limit=20 """
+        """ get all threat_actor using pagination default limit=5 """
 
         data = parser.parse_args()
 
         if data['limit'] is None:
-            limit = 20
+            limit = 5
         else:
             limit = int(data['limit'])
 
@@ -44,8 +44,7 @@ class AllThreatActor(Resource):
 
         # get data
         threat_actor = ThreatActor()
-        threat_actor_data = threat_actor.get_all(limit, offset, sort, filt)
-        size = threat_actor.count()
+        threat_actor_data, size = threat_actor.get_all(limit, offset, sort, filt)
 
         # get links
         links = get_links(size, limit, offset)

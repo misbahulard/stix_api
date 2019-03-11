@@ -18,12 +18,12 @@ parser.add_argument('filtered')
 class AllBundle(Resource):
     @jwt_required
     def post(self):
-        """ get all bundle using pagination default limit=20 """
+        """ get all bundle using pagination default limit=5 """
 
         data = parser.parse_args()
 
         if data['limit'] is None:
-            limit = 20
+            limit = 5
         else:
             limit = int(data['limit'])
 
@@ -44,8 +44,7 @@ class AllBundle(Resource):
 
         # get data
         bundle = Bundle()
-        bundle_data = bundle.get_all(limit, offset, sort, filt)
-        size = bundle.count()
+        bundle_data, size = bundle.get_all(limit, offset, sort, filt)
 
         # get links
         links = get_links(size, limit, offset)

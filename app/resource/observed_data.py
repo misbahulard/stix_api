@@ -18,12 +18,12 @@ parser.add_argument('filtered')
 class AllObservedData(Resource):
     @jwt_required
     def post(self):
-        """ get all observed data using pagination default limit=20 """
+        """ get all observed data using pagination default limit=5 """
 
         data = parser.parse_args()
 
         if data['limit'] is None:
-            limit = 20
+            limit = 5
         else:
             limit = int(data['limit'])
 
@@ -44,8 +44,7 @@ class AllObservedData(Resource):
 
         # get data
         observed_data = ObservedData()
-        obs_data = observed_data.get_all(limit, offset, sort, filt)
-        size = observed_data.count()
+        obs_data, size = observed_data.get_all(limit, offset, sort, filt)
 
         # get links
         links = get_links(size, limit, offset)

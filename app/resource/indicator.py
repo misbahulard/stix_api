@@ -18,12 +18,12 @@ parser.add_argument('filtered')
 class AllIndicator(Resource):
     @jwt_required
     def post(self):
-        """ get all indicator using pagination default limit=20 """
+        """ get all indicator using pagination default limit=5 """
 
         data = parser.parse_args()
 
         if data['limit'] is None:
-            limit = 20
+            limit = 5
         else:
             limit = int(data['limit'])
 
@@ -44,8 +44,7 @@ class AllIndicator(Resource):
 
         # get data
         indicator = Indicator()
-        indicator_data = indicator.get_all(limit, offset, sort, filt)
-        size = indicator.count()
+        indicator_data, size = indicator.get_all(limit, offset, sort, filt)
 
         # get links
         links = get_links(size, limit, offset)

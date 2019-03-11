@@ -63,6 +63,8 @@ class UserLogin(Resource):
             return {
                 'success': True,
                 'message': 'Login Success',
+                'id': str(user_data['_id']),
+                'username': user_data['username'],
                 'access_token': access_token,
                 'refresh_token': refresh_token
                 }
