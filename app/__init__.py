@@ -29,7 +29,7 @@ def check_if_token_in_blacklist(decrypted_token):
     else:
         return False
 
-from resource import user, observed_data, indicator, identity, threat_actor, attack_pattern, bundle, analytics
+from resource import user, observed_data, indicator, identity, threat_actor, attack_pattern, bundle, analytics, bundle_ddos
 
 # user
 api.add_resource(user.UserRegistration, '/api/v1/registration')
@@ -63,6 +63,10 @@ api.add_resource(attack_pattern.AttackPatternFind, '/api/v1/attack-patterns/<str
 # bundle
 api.add_resource(bundle.AllBundle, '/api/v1/bundles')
 api.add_resource(bundle.BundleFind, '/api/v1/bundles/<string:id>')
+
+# bundle
+api.add_resource(bundle_ddos.AllBundleDdos, '/api/v1/bundles-ddos')
+api.add_resource(bundle_ddos.BundleFindDdos, '/api/v1/bundles-ddos/<string:id>')
 
 # analytics
 api.add_resource(analytics.AlertCount, '/api/v1/analytics/alert-count')
