@@ -25,3 +25,14 @@ set FLASK_APP=app.py
 set FLASK_ENV=development
 flask run
 ```
+
+### Add admin user
+```
+curl -X POST \
+  http://localhost:5000/api/v1/registration \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "username": "admin",
+    "password": "admin"
+}'
+```
