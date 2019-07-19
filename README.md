@@ -1,6 +1,9 @@
 # stix_api
 STIX api using Flask - python 2.7
 
+## Config
+set the database uri in `config.py`
+
 ## Create python virtual environment
 ```
 virtualenv venv
